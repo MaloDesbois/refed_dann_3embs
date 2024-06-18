@@ -15,7 +15,7 @@ import pickle
 from itertools import combinations
 import torch.nn.functional as F
 from torch.autograd import Function
-from utils_refed_dann import SupervisedContrastiveLoss 
+from utils_refed_dann import SupervisedContrastiveLoss, evaluation  
 from model import ConvTranDisentangle
 
 
