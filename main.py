@@ -23,7 +23,6 @@ from utils import data_loading_source
 
 
 #### pour avoir les données
-
 L2018 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\l2018_modif.npz', allow_pickle=True)
 L2019 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\l2019_modif.npz', allow_pickle=True)
 L2020 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\l2020_modif.npz', allow_pickle=True)
