@@ -17,6 +17,19 @@ import torch.nn.functional as F
 from torch.autograd import Function
 
 
+#### pour avoir les données
+L2018 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\l2018_modif.npz', allow_pickle=True)
+L2019 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\l2019_modif.npz', allow_pickle=True)
+L2020 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\l2020_modif.npz', allow_pickle=True)
+R2018 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\r2018_modif.npz', allow_pickle=True)
+R2019 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\r2019_modif.npz', allow_pickle=True)
+R2020 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\r2020_modif.npz', allow_pickle=True)
+T2018 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\t2018_modif.npz', allow_pickle=True)
+T2019 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\t2019_modif.npz', allow_pickle=True)
+T2020 = np.load(r'C:\Users\stginrae\Documents\GitHub\refed_dann_3embs\Data\t2020_modif.npz', allow_pickle=True)
+rep_geo={f'{R2018}':'R18',f'{R2019}':'R19',f'{R2020}':'R20',f'{T2018}':'T18',f'{T2019}':'T19',f'{T2020}':'T20',f'{L2018}':'L18',f'{L2019}':'L19',f'{L2020}':'L20'}
+####
+
 ## preparation data
 
 def prep_data_(data,ratio=0,ratio_supprimé=0): # datas doit être une liste contenant 1 ou 2 jeux de donnés
