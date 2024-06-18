@@ -204,7 +204,7 @@ class CasualConvTran(nn.Module):
         outa=self.flatten(out)
         out = self.gap(out)
         out = self.flatten(out)
-        if self.role == "dom":                              # on est dans le cas où le modèle travaille sur la partie caractéristique du domaine
+        if self.role == "dom":                              #  le modèle travaille sur la partie caractéristique du domaine
             out_p2=out[:,:self.emb_size//2]
             
             out_inf = out[:,:self.emb_size//2]
