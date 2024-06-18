@@ -245,8 +245,8 @@ class ConvTranDisentangle(torch.nn.Module):
 
         self.inv = CasualConvTran(role='inv',config=config,num_classes=num_classes,dates=dates)  # pour les labels
         self.spec = CasualConvTran(role='dom',config=config,num_classes=8,dates=dates)           # pour les domaines
-        self.dom_rev = nn.LazyLinear(8)                                                          # pour la classif domaine après le reversal layer
-        self.classif = nn.LazyLinear(11)                                                         # pour la classif labels après concaténation des deux sorties
+        self.dom_rev = nn.LazyLinear(8)                                                    # pour la classif domaine après le reversal layer
+        self.classif = nn.LazyLinear(num_classes)                                                # pour la classif labels après concaténation des deux sorties
 
     def forward(self, x,mask,alpha=1):
         classif_inv, inv_emb,classif_p1 = self.inv(x,mask)
@@ -256,4 +256,7 @@ class ConvTranDisentangle(torch.nn.Module):
         
         pred =  torch.concat((classif_p1,classif_p2),dim=1)
         pred = self.classif(pred)
-        return classif_inv, inv_emb, spec_emb_inf,spec_emb_irr, classif_spec_inf,classif_spec_irr,adv_cl_dom,pred
+        return classif_inv, inv_emb, spec_emb_inf,spec_emb_irr, classif_spec_inf,classif_spec_irr,adv_cl_dom,pred       # classif_inv ne sert à rien, inv_emb/spec_emb_inf/spec_emb_irr sont utilisés pour l'orthogonalité
+                                                                                                                        # classif_spec_inf et classif_spec_irr correspondent aux classification de domaine
+                                                                                                                        # adv_cl_dom est la classification du domaine après passage dans le reversal layers
+                                                                                                                        # pred est la prediction des labels obtenue après concatenation des 2 morceaux
