@@ -204,7 +204,7 @@ class CasualConvTran(nn.Module):
         outa=self.flatten(out)
         out = self.gap(out)
         out = self.flatten(out)
-        if self.role == "dom": 
+        if self.role == "dom":                              # on est dans le cas où le modèle travaille sur la partie caractéristique du domaine
             out_p2=out[:,:self.emb_size//2]
             
             out_inf = out[:,:self.emb_size//2]
@@ -214,11 +214,14 @@ class CasualConvTran(nn.Module):
             out_irr = self.out2(out_irr)
             out1_inf = outa[:,:outa.shape[1]//2]
             out1_irr = outa[:,outa.shape[1]//2:]
-            return out_inf,out_irr,out1_inf,out1_irr,out_p2
-        else :
+            return out_inf,out_irr,out1_inf,out1_irr,out_p2  # out_inf et out_irr sont utilisés pour prédire les domaines, out_irr est la partie irrevelant utilisée pour l'orthogonalité
+                                                             # out1_inf=out_p2 correspondent aux partie utilisées pour la prédiction de label et l'orthogonalité
+        
+        else :                                               # partie caractéristique des labels
             out_p1=out
             out=self.out(out)
-            return out,outa,out_p1
+            return out,outa,out_p1                           # out ne sert à rien, outa est la partie utilisée dans le reversial layer pour faire une prédiction de domaine 
+                                                             # out_p1 est la partie qui une fois concaténée avec out_p2 permet la prediciton des labels
 
 
 ## refed
@@ -226,10 +229,10 @@ class ConvTranDisentangle(torch.nn.Module):
     def __init__(self,config, num_classes=11,dates=None):
         super(ConvTranDisentangle, self).__init__()
 
-        self.inv = CasualConvTran(role='inv',config=config,num_classes=num_classes,dates=dates)
-        self.spec = CasualConvTran(role='dom',config=config,num_classes=8,dates=dates)
-        self.dom_rev = nn.LazyLinear(8)
-        self.classif = nn.LazyLinear(11)
+        self.inv = CasualConvTran(role='inv',config=config,num_classes=num_classes,dates=dates)  # pour les labels
+        self.spec = CasualConvTran(role='dom',config=config,num_classes=8,dates=dates)           # pour les domaines
+        self.dom_rev = nn.LazyLinear(8)                                                          # pour la classif domaine après le reversal layer
+        self.classif = nn.LazyLinear(11)                                                         # pour la classif labels après concaténation des deux sorties
 
     def forward(self, x,mask,alpha=1):
         classif_inv, inv_emb,classif_p1 = self.inv(x,mask)
@@ -238,6 +241,5 @@ class ConvTranDisentangle(torch.nn.Module):
         classif_spec_inf,classif_spec_irr, spec_emb_inf,spec_emb_irr,classif_p2 = self.spec(x,mask)
         
         pred =  torch.concat((classif_p1,classif_p2),dim=1)
-        
         pred = self.classif(pred)
         return classif_inv, inv_emb, spec_emb_inf,spec_emb_irr, classif_spec_inf,classif_spec_irr,adv_cl_dom,pred
