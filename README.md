@@ -1,1 +1,1 @@
-REFeD mais la branche spécifique au domaine fourni des informations concernant la classe à la branche invariante
+REFeD mais la branche spécifique au domaine fournies également des informations pour la classification des labels.
